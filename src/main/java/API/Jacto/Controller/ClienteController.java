@@ -1,12 +1,8 @@
 package API.Jacto.Controller;
 
 import API.Jacto.Cadastro.Cliente;
-import API.Jacto.Cadastro.DadosCadastro;
 import API.Jacto.Cadastro.DadosClienteCadastro;
-import API.Jacto.Cadastro.Produto;
-import API.Jacto.Cliente.DadosAtualizaCliente;
 import API.Jacto.Repositories.ClienteRepository;
-import jakarta.persistence.Id;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +12,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
-import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 @Controller
 
@@ -39,7 +33,6 @@ public class ClienteController {
     @Transactional //trabalha dentro do escopo de uma transação no banco de dados
     public ResponseEntity<DadosClienteCadastro> cadastrar(@RequestBody @Valid DadosClienteCadastro dados){
         this.repository.save(new Cliente(dados));
-
         return new ResponseEntity<DadosClienteCadastro> (
                 dados,
                 HttpStatus.CREATED
@@ -51,15 +44,15 @@ public class ClienteController {
 
     @Transactional
     @PutMapping("/{id}")
-    public ResponseEntity<DadosAtualizaCliente> atualizar(
+    public ResponseEntity<DadosClienteCadastro> atualizar(
             @PathVariable("id") Long id,
-            @RequestBody @Valid DadosAtualizaCliente dados
+            @RequestBody @Valid DadosClienteCadastro dados
 
     )  {
         var cliente = this.repository.getReferenceById(id);
         cliente.atualizarInformacoes(dados);
 
-        return new ResponseEntity<DadosAtualizaCliente> (
+        return new ResponseEntity<DadosClienteCadastro> (
                 dados,
                 HttpStatus.OK
         );
@@ -67,8 +60,12 @@ public class ClienteController {
     }
     @DeleteMapping("/{id}")
     @Transactional
-    public void excluir(@PathVariable Long id) {
+    public ResponseEntity excluir(@PathVariable Long id) {
         repository.deleteById(id);
+
+        return new ResponseEntity (
+                HttpStatus.NO_CONTENT
+        );
     }
 
 

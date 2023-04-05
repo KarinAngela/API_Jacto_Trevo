@@ -2,9 +2,7 @@ package API.Jacto.Controller;
 
 
 import API.Jacto.Cadastro.DadosCadastro;
-import API.Jacto.Cadastro.DadosClienteCadastro;
 import API.Jacto.Cadastro.Produto;
-import API.Jacto.Cliente.DadosAtualizaCliente;
 import API.Jacto.Repositories.ProdutoRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -35,7 +33,8 @@ public class ProdutoController {
     @PostMapping
     @Transactional //trabalha dentro do escopo de uma transação no banco de dados
     public ResponseEntity<DadosCadastro> cadastrar(@RequestBody @Valid DadosCadastro dados){
-        this.repository.save(new Produto(dados));
+        Produto produto = new Produto(dados);
+        this.repository.save(produto);
 
         return new ResponseEntity<DadosCadastro> (
                 dados,
@@ -60,8 +59,12 @@ public class ProdutoController {
     }
     @DeleteMapping("/{id}")
     @Transactional
-    public void excluir(@PathVariable Long id) {
+    public ResponseEntity excluir(@PathVariable Long id) {
         repository.deleteById(id);
+
+        return new ResponseEntity (
+                HttpStatus.NO_CONTENT
+        );
     }
 
 

@@ -2,7 +2,6 @@
 package API.Jacto.Cadastro;
 
 
-import API.Jacto.Cliente.DadosAtualizaCliente;
 import jakarta.persistence.*;
 
 import lombok.AllArgsConstructor;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 /**construtor q recebe todos os campo**/
 @EqualsAndHashCode(of = "id")
 public class Cliente {
-
 
 
     @Id
@@ -49,7 +47,10 @@ public class Cliente {
 
 //Atuliza as informações do cliente, está especificando qual podem ser atualizadas
     @PutMapping
-    public void atualizarInformacoes(DadosAtualizaCliente dados) {
+    public void atualizarInformacoes(DadosClienteCadastro dados) {
+        if (dados.nome() != null) {
+            this.nome = dados.nome();
+        }
         if (dados.email() != null) {
             this.email = dados.email();
         }
